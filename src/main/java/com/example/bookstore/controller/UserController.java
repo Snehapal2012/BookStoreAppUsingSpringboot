@@ -36,7 +36,7 @@ public class UserController {
     }
     //Create Api for Getting particular user details which will be found by id
     @GetMapping("/getByUserId/{id}")
-    public ResponseEntity<ResponseUserDTO> getByUserId(@PathVariable long id){
+    public ResponseEntity<ResponseUserDTO> getByUserId(@PathVariable Long id){
         Optional<User> user=userService.getByUserId(id);
         ResponseUserDTO responseUserDTO =new ResponseUserDTO("Searched user details by id is found!",user);
         return new ResponseEntity<>(responseUserDTO,HttpStatus.FOUND);
@@ -66,7 +66,7 @@ public class UserController {
     @GetMapping("/loginCheck")
     public ResponseEntity<ResponseUserDTO> loginCheck(@RequestParam(value = "email",defaultValue = "")String email, @RequestParam(value = "password",defaultValue = "")String password){
         String result=userService.loginCheck(email,password);
-        ResponseUserDTO responseUserDTO =new ResponseUserDTO("Congratulations!! You have successfully logged in!","Welcome...!!");
+        ResponseUserDTO responseUserDTO =new ResponseUserDTO("Congratulations!! You have successfully logged in!",result);
         return new ResponseEntity<>(responseUserDTO,HttpStatus.ACCEPTED);
     }
     @PostMapping("/login")
@@ -76,9 +76,15 @@ public class UserController {
         return  new ResponseEntity<>(responseUserDTO,HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}/{token}")
-    public ResponseEntity<ResponseUserDTO> deleteById(@PathVariable long id,@PathVariable String token){
+    public ResponseEntity<ResponseUserDTO> deleteById(@PathVariable Long id,@PathVariable String token){
         userService.deleteById(id,token);
         ResponseUserDTO responseUserDTO=new ResponseUserDTO("User details has been deleted!","Deleted user id is: "+id);
         return new ResponseEntity<>(responseUserDTO,HttpStatus.GONE);
+    }
+    @GetMapping("/getByToken/{token}")
+    public ResponseEntity<ResponseUserDTO> getByToken(@PathVariable String token){
+        User user=userService.getByToken(token);
+        ResponseUserDTO responseUserDTO=new ResponseUserDTO("User found!",user);
+        return new ResponseEntity<>(responseUserDTO,HttpStatus.OK);
     }
 }

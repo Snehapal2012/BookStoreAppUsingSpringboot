@@ -14,8 +14,8 @@ public class Book {
     //Book table attributes
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long bookId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bookId;
     private String bookName;
     private String authorName;
     private String bookDescription;

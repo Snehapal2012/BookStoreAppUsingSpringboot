@@ -6,6 +6,7 @@ import com.example.bookstore.model.Book;
 import com.example.bookstore.model.Order;
 import com.example.bookstore.model.User;
 import com.example.bookstore.repository.BookRepo;
+import com.example.bookstore.repository.CartRepo;
 import com.example.bookstore.repository.OrderRepo;
 import com.example.bookstore.repository.UserRepo;
 import com.example.bookstore.util.EmailSenderService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService{
@@ -25,6 +27,8 @@ public class OrderService implements IOrderService{
     @Autowired
     BookRepo bookRepo;
     @Autowired
+    CartRepo cartRepo;
+    @Autowired
     TokenUtil tokenUtil;
     @Autowired
     EmailSenderService emailSenderService;
@@ -32,14 +36,33 @@ public class OrderService implements IOrderService{
     @Override
     public Order insert(OrderDTO orderDTO) throws Exception{
         Optional<User> user = userRepo.findById(orderDTO.getUser());
-        Optional<Book> book = bookRepo.findById(orderDTO.getBook());
-        if (user.isPresent() && book.isPresent()) {
-            Order order = new Order(user.get(), book.get(), orderDTO.getDate(), orderDTO.getPrice(), orderDTO.getQuantity(), orderDTO.getAddress(),orderDTO.getCancel());
-                orderRepo.save(order);
+        List<Book> bookList=orderDTO.getBook().stream().map(book -> bookRepo.findById(book).get()).collect(Collectors.toList());
+        long price=bookList.stream().mapToLong(n-> (n.getPrice())).sum();
+        long quantity=bookList.stream().mapToLong(n-> n.getQuantity()).sum();
+        if (user.isPresent()) {
+            Order order = new Order(user.get(), bookList, price, quantity, orderDTO.getAddress(),orderDTO.getCancel());
+            orderRepo.save(order);
             String token=tokenUtil.createToken(order.getOrderId());
-            emailSenderService.sendEmail(user.get().getEmail(), "Order placed!","Hii...."+user.get().getFirstName()+" ! \n\n Your order has been placed successfully! Order details are below: \n\n Order id:  "+order.getOrderId()+"\n Order date:  "+order.getDate()+"\n Order Price:  "+order.getPrice()+"\n Order quantity:  "+order.getQuantity()+"\n Order address:  "+order.getAddress()+"\n Order user id:  "+order.getUser()+"\n Order book id:  "+order.getBook()+"\n Order cancellation status:  "+order.isCancel());
-                return order;
+            emailSenderService.sendEmail(user.get().getEmail(), "Order placed!","Hii...."+user.get().getFirstName()+" ! \n\n Your order has been placed successfully! Order details are below: \n\n Order id:  "+order.getOrderId()+"\n\n Order date:  "+order.getLocalDate()+"\n\n Order Price:  "+price+"\n Order quantity:  "+quantity+"\n Order address:  "+order.getAddress()+"\n Order user id:  "+order.getUser()+"\n Order book id:  "+bookList+"\n Order cancellation status:  "+order.isCancel());
+            return order;
         } else {
+            throw new OrderException("User id or book id did not match! Please check and try again!");
+        }
+    }
+    @Override
+    public Order placeOrder(OrderDTO orderDTO){
+        Optional<User> user=userRepo.findById(orderDTO.getUser());
+        List<Book> bookList=orderDTO.getBook().stream().map(book->bookRepo.findById(book).get()).collect(Collectors.toList());
+        long price=bookList.stream().mapToLong(n->(n.getPrice())).sum();
+        long quantity=bookList.stream().mapToLong(n->(n.getQuantity())).sum();
+        if (user.isPresent()){
+            Long cartUser=cartRepo.findByCartUser(orderDTO.getUser());
+            cartRepo.deleteById(cartUser);
+            Order order=new Order(user.get(),bookList,price,quantity,orderDTO.getAddress(), orderDTO.getCancel());
+            orderRepo.save(order);
+            emailSenderService.sendEmail(user.get().getEmail(), "Order placed!","Hii...."+user.get().getFirstName()+" ! \n\n Your order has been placed successfully! Order details are below: \n\n Order id:  "+order.getOrderId()+"\n\n Order date:  "+order.getLocalDate()+"\n\n Order Price:  "+price+"\n Order quantity:  "+quantity+"\n Order address:  "+order.getAddress()+"\n Order user id:  "+order.getUser()+"\n Order book id:  "+bookList+"\n Order cancellation status:  "+order.isCancel());
+            return order;
+        }else {
             throw new OrderException("User id or book id did not match! Please check and try again!");
         }
     }
@@ -77,19 +100,19 @@ public class OrderService implements IOrderService{
     @Override
     public Order updateById(long id, OrderDTO orderDTO){
         Optional<User> user=userRepo.findById(orderDTO.getUser());
-        Optional<Book> book=bookRepo.findById(orderDTO.getBook());
+        List<Book> bookList=orderDTO.getBook().stream().map(book->bookRepo.findById(book).get()).collect(Collectors.toList());
         Order order=orderRepo.findById(id).get();
-        if (orderRepo.findById(id).isPresent() && user.isPresent() && book.isPresent()){
-                order.setDate(orderDTO.getDate());
-                order.setPrice(orderDTO.getPrice());
-                order.setQuantity(orderDTO.getQuantity());
+        if (orderRepo.findById(id).isPresent() && user.isPresent()){
+
                 order.setAddress(orderDTO.getAddress());
                 order.setUser(user.get());
-                order.setBook(book.get());
+                order.setBook(bookList.stream().map(book -> bookRepo.findById(book.getBookId()).get()).collect(Collectors.toList()));
                 order.setCancel(orderDTO.getCancel());
+            long price=bookList.stream().mapToLong(n->(n.getPrice())).sum();
+            long quantity=bookList.stream().mapToLong(n-> (n.getQuantity())).sum();
                 orderRepo.save(order);
             String token=tokenUtil.createToken(order.getOrderId());
-            emailSenderService.sendEmail(user.get().getEmail(), "Order is updated!","Hii...."+user.get().getFirstName()+" ! \n\n Your order has been updated successfully! Order details are below: \n\n Order id:  "+order.getOrderId()+"\n Order date:  "+order.getDate()+"\n Order Price:  "+order.getPrice()+"\n Order quantity:  "+order.getQuantity()+"\n Order address:  "+order.getAddress()+"\n Order user id:  "+order.getUser()+"\n Order book id:  "+order.getBook()+"\n Order cancellation status:  "+order.isCancel());
+            emailSenderService.sendEmail(user.get().getEmail(), "Order is updated!","Hii...."+user.get().getFirstName()+" ! \n\n Your order has been updated successfully! Order details are below: \n\n Order id:  "+order.getOrderId()+"\n Order date:  "+ order.getLocalDate()+"\n Order Price:  "+price+"\n Order quantity:  "+quantity+"\n Order address:  "+order.getAddress()+"\n Order user id:  "+order.getUser()+"\n Order book id:  "+bookList+"\n Order cancellation status:  "+order.isCancel());
                 return order;
             }else {
             throw new OrderException("Order id, user id or book id did not match! Please check and try again!");

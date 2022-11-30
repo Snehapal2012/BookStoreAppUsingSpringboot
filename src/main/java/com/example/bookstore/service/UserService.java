@@ -25,12 +25,13 @@ public class UserService implements IUserService {
     @Autowired
     EmailSenderService emailSenderService;
     //Apply logic for Insert user details in the database
+
     @Override
     public User register(UserDTO userDTO) throws Exception{
         User user=new User(userDTO);
+        String token=tokenUtil.createToken(user.getUserId());
         userRepo.save(user);
-        String token=tokenUtil.createToken(user.getUserID());
-        emailSenderService.sendEmail(user.getEmail(),"Registered in Book Store", "Hii...."+user.getFirstName()+"\n You have been successfully registered!\n\n Your registered details are:\n\n User Id:  "+user.getUserID()+"\n First Name:  "+user.getFirstName()+"\n Last Name:  "+user.getLastName()+"\n Email:  "+user.getEmail()+"\n Address:  "+user.getAddress()+"\n DOB:  "+user.getDob());
+        emailSenderService.sendEmail(user.getEmail(),"Registered in Book Store", "Hii...."+user.getFirstName()+"\n You have been successfully registered!\n\n Your registered details are:\n\n User Id:  "+user.getUserId()+"\n First Name:  "+user.getFirstName()+"\n Last Name:  "+user.getLastName()+"\n Email:  "+user.getEmail()+"\n Address:  "+user.getAddress()+"\n DOB:  "+user.getDob()+"\n Token:  "+token);
         return user;
     }
     //Apply logic for Getting all user details present in the database
@@ -122,6 +123,16 @@ public class UserService implements IUserService {
             emailSenderService.sendEmail(user.get().getEmail(), "Order is deleted!","Hii...."+user.get().getFirstName()+" ! \n\n Your order has been deleted successfully! Order id: "+id);
         }else {
             throw new UserException("Sorry! We can not find the user id: "+id);
+        }
+    }
+    @Override
+    public User getByToken(String token){
+        Long userId=tokenUtil.decodeToken(token);
+        Optional<User> user=userRepo.findById(userId);
+        if(user.isPresent()){
+            return user.get();
+        }else {
+            throw new UserException("User is not found!");
         }
     }
 

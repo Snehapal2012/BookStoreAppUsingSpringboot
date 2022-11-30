@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -13,22 +14,21 @@ import java.time.LocalDate;
 public class Order {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long orderId;
-    private LocalDate date;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long orderId;
+    LocalDate localDate =LocalDate.now();
     private long price;
     private long quantity;
     private String address;
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "order_user_id")
     private User user;
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "order_book_id")
-    private Book book;
+    private List<Book> book;
     private boolean cancel;
 
-    public Order(User user, Book book, LocalDate date, long price, long quantity, String address,boolean cancel) {
-        this.date=date;
+    public Order(User user, List<Book> book, long price, long quantity, String address,boolean cancel) {
         this.price=price;
         this.quantity=quantity;
         this.address=address;

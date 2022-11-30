@@ -15,14 +15,15 @@ public class User {
     //User table attributes
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long userID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
     private String firstName;
     private String lastName;
     private String email;
     private String address;
     private LocalDate dob;
     private String password;
+
 
     //Create Constructor
     public User(UserDTO userDTO){

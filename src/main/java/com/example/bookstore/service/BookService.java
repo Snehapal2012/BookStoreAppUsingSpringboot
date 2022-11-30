@@ -31,7 +31,7 @@ public class BookService implements IBookService {
     }
     //Apply logic for Getting particular book details which will be found by id
     @Override
-    public Optional<Book> getById(long id){
+    public Optional<Book> getById(Long id){
         Optional<Book> book=bookRepo.findById(id);
         if(book.isPresent()){
             return book;
@@ -41,7 +41,7 @@ public class BookService implements IBookService {
     }
     //Apply logic for Deleting particular book details which will be found by id
     @Override
-    public void deleteById(long id){
+    public void deleteById(Long id){
         Optional<Book> book=bookRepo.findById(id);
         if(book.isPresent()){
             bookRepo.deleteById(id);
@@ -61,7 +61,7 @@ public class BookService implements IBookService {
     }
     //Apply logic for Updating particular book details which will be found by id
     @Override
-    public Book updateBookById(BookDTO bookDTO,long id){
+    public Book updateBookById(BookDTO bookDTO,Long id){
         Book book=bookRepo.findById(id).get();
         if(bookRepo.findById(id).isPresent()){
             book.setBookName(bookDTO.getBookName());
@@ -90,10 +90,11 @@ public class BookService implements IBookService {
     }
     //Apply logic for Updating quantity for particular book which will be found by id
     @Override
-    public Book updateQuantity(BookDTO bookDTO,long id){
+    public Book updateQuantity(BookDTO bookDTO,Long id){
         Optional<Book> bookList=bookRepo.findById(id);
         if(bookList.isPresent()){
             Book book=bookRepo.findById(id).get();
+            book.setQuantity(bookDTO.getQuantity());
             bookRepo.save(book);
             return book;
         }else {

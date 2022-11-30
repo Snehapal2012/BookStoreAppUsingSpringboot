@@ -25,4 +25,6 @@ public interface IUserService {
     String login(LoginDTO loginDTO);
 
     void deleteById(long id, String token);
+
+    User getByToken(String token);
 }

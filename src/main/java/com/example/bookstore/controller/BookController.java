@@ -35,7 +35,7 @@ public class BookController {
     }
     //Create Api for Getting particular book details which will be found by id
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ResponseBookDTO> getById(@PathVariable long id){
+    public ResponseEntity<ResponseBookDTO> getById(@PathVariable Long id){
         Optional<Book> book=bookService.getById(id);
         ResponseBookDTO responseBookDTO=new ResponseBookDTO("Searched book by id is found!",book);
         return new ResponseEntity<>(responseBookDTO,HttpStatus.FOUND);
@@ -43,7 +43,7 @@ public class BookController {
 
     //Create Api for Deleting particular book details which will be found by id
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseBookDTO> deleteById(@PathVariable long id){
+    public ResponseEntity<ResponseBookDTO> deleteById(@PathVariable Long id){
         bookService.deleteById(id);
         ResponseBookDTO responseBookDTO=new ResponseBookDTO("Book details is deleted!","Deleted book id is: "+id);
         return new ResponseEntity<>(responseBookDTO,HttpStatus.GONE);
@@ -57,7 +57,7 @@ public class BookController {
     }
     //Create Api for Updating particular book details which will be found by id
    @PutMapping("/updateById/{id}")
-    public ResponseEntity<ResponseBookDTO> updateBookById(@Valid @RequestBody BookDTO bookDTO,@PathVariable long id){
+    public ResponseEntity<ResponseBookDTO> updateBookById(@Valid @RequestBody BookDTO bookDTO,@PathVariable Long id){
         Book book=bookService.updateBookById(bookDTO,id);
         ResponseBookDTO responseBookDTO=new ResponseBookDTO("Your book details is updated!",book);
         return new ResponseEntity<>(responseBookDTO,HttpStatus.ACCEPTED);
@@ -78,7 +78,7 @@ public class BookController {
     }
     //Create Api for Updating quantity for particular book which will be found by id
     @PutMapping("/updateQuantity/{id}")
-    public ResponseEntity<ResponseBookDTO> updateQuantity(@Valid @RequestBody BookDTO bookDTO,@PathVariable long id){
+    public ResponseEntity<ResponseBookDTO> updateQuantity(@Valid @RequestBody BookDTO bookDTO,@PathVariable Long id){
         Book book=bookService.updateQuantity(bookDTO,id);
         ResponseBookDTO responseBookDTO=new ResponseBookDTO("Your book details is updated!",book);
         return new ResponseEntity<>(responseBookDTO,HttpStatus.ACCEPTED);

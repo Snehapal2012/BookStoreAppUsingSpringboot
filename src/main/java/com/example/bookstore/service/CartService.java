@@ -46,7 +46,7 @@ public class CartService implements ICartService {
     }
     //Apply logic for Getting particular cart details which will be found by id
     @Override
-    public Optional<Cart> getById(long id){
+    public Optional<Cart> getById(Long id){
         Optional<Cart> cart=cartRepo.findById(id);
         if (cart.isPresent()){
             return cart;
@@ -56,7 +56,7 @@ public class CartService implements ICartService {
     }
     //Apply logic for Getting particular cart details which will be found by user id
     @Override
-    public Optional<Cart> getByUserId(long userId){
+    public Optional<Cart> getByUserId(Long userId){
         Optional<Cart> cart=cartRepo.findByUserId(userId);
         if (cart.isPresent()){
             return cart;
@@ -66,7 +66,7 @@ public class CartService implements ICartService {
     }
     //Apply logic for Deleting particular cart details which will be found by id
     @Override
-    public void deleteById(long id){
+    public void deleteById(Long id){
         Optional<Cart> cart=cartRepo.findById(id);
         if (cart.isPresent()){
             cartRepo.deleteById(id);
@@ -76,7 +76,7 @@ public class CartService implements ICartService {
     }
     //Apply logic for Updating particular cart details which will be found by id
     @Override
-    public Cart updateById(CartDTO cartDTO,long id){
+    public Cart updateById(CartDTO cartDTO,Long id){
         Optional<User> user=userRepo.findById(cartDTO.getUserId());
         Optional<Book> book=bookRepo.findById(cartDTO.getBookId());
         Cart cart=cartRepo.findById(id).get();
@@ -92,7 +92,7 @@ public class CartService implements ICartService {
     }
     //Apply logic for Updating quantity for particular cart which will be found by id
     @Override
-    public Cart UpdateQuantity(CartDTO cartDTO, long id){
+    public Cart UpdateQuantity(CartDTO cartDTO, Long id){
         Cart cart=cartRepo.findById(id).get();
         if(cartRepo.findById(id).isPresent()){
             cart.setQuantity(cartDTO.getQuantity());

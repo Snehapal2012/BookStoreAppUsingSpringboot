@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class CartDTO {
     @NotNull(message = "User Id can not be null!")
-    private long userId;
+    private Long userId;
     @NotNull(message = "Book Id can not be null!")
-    private long bookId;
+    private Long bookId;
     @NotNull(message = "Quantity can not be null!")
     private long quantity;
 }

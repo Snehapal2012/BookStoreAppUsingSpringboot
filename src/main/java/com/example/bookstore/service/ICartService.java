@@ -10,14 +10,14 @@ public interface ICartService {
 
     List<Cart> getAll();
 
-    Optional<Cart> getById(long id);
-    Optional<Cart> getByUserId(long userId);
+    Optional<Cart> getById(Long id);
+    Optional<Cart> getByUserId(Long userId);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 
-    Cart updateById(CartDTO cartDTO,long id);
+    Cart updateById(CartDTO cartDTO,Long id);
 
-    Cart UpdateQuantity(CartDTO cartDTO, long id);
+    Cart UpdateQuantity(CartDTO cartDTO, Long id);
 
     Cart insert(CartDTO cartDTO);
 }

@@ -35,35 +35,35 @@ public class CartController {
     }
     //Create Api for Getting particular cart details which will be found by id
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ResponseCartDTO> getById(@PathVariable long id){
+    public ResponseEntity<ResponseCartDTO> getById(@PathVariable Long id){
         Optional<Cart> cart=cartService.getById(id);
         ResponseCartDTO responseCartDTO=new ResponseCartDTO("Searched cart details by id is found!",cart);
         return new ResponseEntity<>(responseCartDTO,HttpStatus.FOUND);
     }
     //Create Api for Getting particular cart details which will be found by user id
     @GetMapping("/getByUserId/{userId}")
-    public ResponseEntity<ResponseCartDTO> getByUserId(@PathVariable long userId){
+    public ResponseEntity<ResponseCartDTO> getByUserId(@PathVariable Long userId){
         Optional<Cart> cart=cartService.getByUserId(userId);
         ResponseCartDTO responseCartDTO=new ResponseCartDTO("Searched cart details by id is found!",cart);
         return new ResponseEntity<>(responseCartDTO,HttpStatus.FOUND);
     }
     //Create Api for Deleting particular cart details which will be found by id
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseCartDTO> deleteById(@PathVariable long id){
+    public ResponseEntity<ResponseCartDTO> deleteById(@PathVariable Long id){
         cartService.deleteById(id);
         ResponseCartDTO responseCartDTO=new ResponseCartDTO("Cart details is deleted!","Deleted cart id is: "+id);
         return new ResponseEntity<>(responseCartDTO,HttpStatus.GONE);
     }
     //Create Api for Updating particular cart details which will be found by id
     @PutMapping("/updateById/{id}")
-    public ResponseEntity<ResponseCartDTO> updateById(@Valid @RequestBody CartDTO cartDTO,@PathVariable long id){
+    public ResponseEntity<ResponseCartDTO> updateById(@Valid @RequestBody CartDTO cartDTO,@PathVariable Long id){
         Cart cart=cartService.updateById(cartDTO,id);
         ResponseCartDTO responseCartDTO=new ResponseCartDTO("Your cart details is updated!",cart);
         return new ResponseEntity<>(responseCartDTO,HttpStatus.ACCEPTED);
     }
     //Create Api for Updating quantity for particular cart which will be found by id
     @PutMapping("/updateQuantity/{id}")
-    public ResponseEntity<ResponseCartDTO> updateQuantity(@Valid @RequestBody CartDTO cartDTO,@PathVariable long id){
+    public ResponseEntity<ResponseCartDTO> updateQuantity(@Valid @RequestBody CartDTO cartDTO,@PathVariable Long id){
         Cart cart=cartService.UpdateQuantity(cartDTO,id);
         ResponseCartDTO responseCartDTO=new ResponseCartDTO("Your cart quantity is updated!",cart);
         return new ResponseEntity<>(responseCartDTO,HttpStatus.ACCEPTED);

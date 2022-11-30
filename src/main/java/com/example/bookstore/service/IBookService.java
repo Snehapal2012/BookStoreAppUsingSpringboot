@@ -11,17 +11,17 @@ public interface IBookService {
 
     List<Book> getAllBook();
 
-    Optional<Book> getById(long id);
+    Optional<Book> getById(Long id);
 
-     void deleteById(long id);
+     void deleteById(Long id);
 
     Book searchByBookName(String name);
 
-    Book updateBookById(BookDTO bookDTO, long id);
+    Book updateBookById(BookDTO bookDTO, Long id);
 
     List<Book> sortingAsce();
 
     List<Book> sortingDsce();
 
-    Book updateQuantity(BookDTO bookDTO, long id);
+    Book updateQuantity(BookDTO bookDTO, Long id);
 }

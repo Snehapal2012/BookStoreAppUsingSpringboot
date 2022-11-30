@@ -25,6 +25,13 @@ public class OrderController {
         ResponseOrderDTO responseOrderDTO=new ResponseOrderDTO("Order details are submitted!",order);
         return new ResponseEntity<>(responseOrderDTO, HttpStatus.CREATED);
     }
+    @PostMapping("/placeOrder")
+    public ResponseEntity<ResponseOrderDTO> placeOrder(@Valid @RequestBody OrderDTO orderDTO) {
+        Order order=orderService.placeOrder(orderDTO);
+        ResponseOrderDTO responseOrderDTO=new ResponseOrderDTO("Order details are submitted!",order);
+        return new ResponseEntity<>(responseOrderDTO, HttpStatus.CREATED);
+    }
+
     //Create Api for Getting all order details present in the database
     @GetMapping("/getAll")
     public ResponseEntity<ResponseOrderDTO> getAll(){
@@ -34,21 +41,21 @@ public class OrderController {
     }
     //Create Api for Getting particular order details which will be found by id
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ResponseOrderDTO> getById(@PathVariable long id){
+    public ResponseEntity<ResponseOrderDTO> getById(@PathVariable Long id){
         Order order=orderService.getById(id);
         ResponseOrderDTO responseOrderDTO=new ResponseOrderDTO("Searched order details by id is found!",order);
         return new ResponseEntity<>(responseOrderDTO,HttpStatus.FOUND);
     }
     //Create Api for Deleting particular order details which will be found by id
     @DeleteMapping("/delete/{orderId}/{userId}")
-    public ResponseEntity<ResponseOrderDTO> deleteById(@PathVariable long orderId, @PathVariable long userId){
+    public ResponseEntity<ResponseOrderDTO> deleteById(@PathVariable Long orderId, @PathVariable Long userId){
         String result=orderService.deleteById(orderId,userId);
-        ResponseOrderDTO responseOrderDTO=new ResponseOrderDTO("Cart details is deleted!","Deleted order id is: "+orderId);
+        ResponseOrderDTO responseOrderDTO=new ResponseOrderDTO("Cart details is deleted!",result);
         return new ResponseEntity<>(responseOrderDTO,HttpStatus.GONE);
     }
     //Create Api for Updating particular order details which will be found by id
     @PutMapping("/updateById/{id}")
-    public ResponseEntity<ResponseOrderDTO> updateById(@Valid @PathVariable long id,@RequestBody OrderDTO orderDTO){
+    public ResponseEntity<ResponseOrderDTO> updateById(@Valid @PathVariable Long id,@RequestBody OrderDTO orderDTO){
         Order order=orderService.updateById(id,orderDTO);
         ResponseOrderDTO responseOrderDTO=new ResponseOrderDTO("Searched details is updated!",order);
         return new ResponseEntity<>(responseOrderDTO,HttpStatus.ACCEPTED);

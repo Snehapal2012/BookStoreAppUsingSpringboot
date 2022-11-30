@@ -12,8 +12,8 @@ import javax.persistence.*;
 public class Cart {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long cartId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cartId;
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "cart_user_id")
     private User userId;

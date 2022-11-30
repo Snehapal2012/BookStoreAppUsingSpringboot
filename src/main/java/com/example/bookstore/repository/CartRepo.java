@@ -12,10 +12,11 @@ import java.util.Optional;
 @Repository
 public interface CartRepo extends JpaRepository<Cart, Long> {
     @Query(value = "select * from book_store.cart where cart.cart_user_id=:userId",nativeQuery = true)
-    Optional<Cart> findByUserId(long userId);
+    Optional<Cart> findByUserId(Long userId);
     @Transactional
     @Modifying
     @Query(value = "delete from book_store.cart where cart.cart_id=:id",nativeQuery = true)
-    void deleteById(long id);
-
+    void deleteById(Long id);
+    @Query(value = "select cart_id from book_store.cart where cart.cart_user_id=:user",nativeQuery = true)
+    Long findByCartUser(Long user);
 }

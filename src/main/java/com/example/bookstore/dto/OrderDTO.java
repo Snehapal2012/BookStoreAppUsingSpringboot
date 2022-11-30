@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,9 +21,9 @@ public class OrderDTO {
     @NotNull(message = "Address can not be null!")
     private String address;
     @NotNull(message = "User Id can not be null!")
-    private long user;
+    private Long user;
     @NotNull(message = "Book Id can not be null!")
-    private long book;
+    private List<Long> book;
     private boolean cancel;
 
     public boolean getCancel() {

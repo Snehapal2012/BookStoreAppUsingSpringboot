@@ -16,4 +16,6 @@ public interface IOrderService {
     Order updateById(long id, OrderDTO orderDTO) ;
 
     String deleteById(long orderId, long userId);
+
+    Order placeOrder(OrderDTO orderDTO);
 }
